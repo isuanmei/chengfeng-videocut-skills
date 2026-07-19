@@ -2,7 +2,7 @@
 
 Copyright 2026 chengfeng / AI产品自由.
 
-This project is created and maintained by **chengfeng / AI产品自由**.
+The original video editing Skills and installer are created and maintained by **chengfeng / AI产品自由**.
 
 Official accounts:
 
@@ -19,9 +19,14 @@ Original source:
 https://github.com/Agentchengfeng/chengfeng-videocut-skills
 ```
 
-Please keep this attribution when using, copying, translating, redistributing, or adapting this project.
+Additional original work in this fork:
+
+```text
+纪录片分镜 Skill
+Copyright 2026 isuanmei / 酸梅纪录片系统
+Repository: https://github.com/isuanmei/chengfeng-videocut-skills
+```
+
+Please keep the original attribution, LICENSE file and this NOTICE when using, copying, translating, redistributing or adapting the project.
 
 This repository is licensed under the Apache License, Version 2.0.
-When redistributing this project or derivative works, keep the LICENSE file
-and a readable copy of this NOTICE attribution, as required by Apache-2.0
-Section 4.
