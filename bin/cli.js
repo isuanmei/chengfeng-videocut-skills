@@ -5,7 +5,7 @@ const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
-const defaultRepo = "https://github.com/Agentchengfeng/chengfeng-videocut-skills.git";
+const defaultRepo = "https://github.com/isuanmei/chengfeng-videocut-skills.git";
 const skillItems = [
   "README.md",
   "LICENSE",
@@ -14,6 +14,7 @@ const skillItems = [
   ".env.example",
   "剪口播",
   "口播成片",
+  "纪录片分镜",
   "自进化"
 ];
 
@@ -30,15 +31,20 @@ Options:
   -h, --help                  Show help
 
 Examples:
-  npx chengfeng-videocut-skills install
-  npx chengfeng-videocut-skills install --target codex
-  npx chengfeng-videocut-skills install --dir ~/.claude/skills/chengfeng-videocut-skills
-  npx chengfeng-videocut-skills install --repo https://github.com/Agentchengfeng/chengfeng-videocut-skills.git
+  npx chengfeng-videocut-skills install --repo ${defaultRepo}
+  npx chengfeng-videocut-skills install --target codex --repo ${defaultRepo}
+  npx chengfeng-videocut-skills install --dir ~/.codex/skills/chengfeng-videocut-skills --repo ${defaultRepo}
 `);
 }
 
 function parseArgs(argv) {
-  const options = { command: argv[0], target: "all", dir: null, repo: defaultRepo };
+  const options = {
+    command: argv[0],
+    target: "all",
+    dir: null,
+    repo: defaultRepo,
+    help: false
+  };
 
   if (argv[0] === "-h" || argv[0] === "--help") {
     options.help = true;
@@ -87,7 +93,11 @@ function expandHome(inputPath) {
 }
 
 function timestamp() {
-  return new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "").replace("T", "-");
+  return new Date()
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\..+/, "")
+    .replace("T", "-");
 }
 
 function copyItem(source, destination) {
@@ -105,10 +115,7 @@ function run(command, args, options = {}) {
     encoding: "utf8"
   });
 
-  if (result.error) {
-    throw result.error;
-  }
-
+  if (result.error) throw result.error;
   if (result.status !== 0) {
     throw new Error(`${command} ${args.join(" ")} failed with exit code ${result.status}`);
   }
@@ -117,7 +124,9 @@ function run(command, args, options = {}) {
 }
 
 function downloadRepo(repoUrl) {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "chengfeng-videocut-skills-"));
+  const tempRoot = fs.mkdtempSync(
+    path.join(os.tmpdir(), "chengfeng-videocut-skills-")
+  );
   const destination = path.join(tempRoot, "repo");
 
   console.log(`Downloading latest skills from ${repoUrl}`);
@@ -150,9 +159,12 @@ function installTo(sourceRoot, destination) {
 
 function targetsFor(options) {
   if (options.dir) return [options.dir];
-
-  if (options.target === "claude") return ["~/.claude/skills/chengfeng-videocut-skills"];
-  if (options.target === "codex") return ["~/.codex/skills/chengfeng-videocut-skills"];
+  if (options.target === "claude") {
+    return ["~/.claude/skills/chengfeng-videocut-skills"];
+  }
+  if (options.target === "codex") {
+    return ["~/.codex/skills/chengfeng-videocut-skills"];
+  }
   if (options.target === "all") {
     return [
       "~/.claude/skills/chengfeng-videocut-skills",
@@ -176,14 +188,19 @@ function main() {
   }
 
   const { sourceRoot, tempRoot } = downloadRepo(options.repo);
-  const installed = targetsFor(options).map((target) => installTo(sourceRoot, target));
-  fs.rmSync(tempRoot, { recursive: true, force: true });
+  try {
+    const installed = targetsFor(options).map((target) =>
+      installTo(sourceRoot, target)
+    );
 
-  console.log("\nInstalled chengfeng videocut skills:");
-  for (const destination of installed) {
-    console.log(`- ${destination}`);
+    console.log("\nInstalled chengfeng videocut skills:");
+    for (const destination of installed) {
+      console.log(`- ${destination}`);
+    }
+    console.log("\nNext: open Claude Code or Codex and call a skill by name.");
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
   }
-  console.log("\nNext: open Claude Code or Codex and use the videocut skills.");
 }
 
 try {
