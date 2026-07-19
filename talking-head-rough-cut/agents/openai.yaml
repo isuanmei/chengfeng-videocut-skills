@@ -1,0 +1,4 @@
+interface:
+  display_name: "口播粗剪"
+  short_description: "Reviewable rough cuts for lecture videos"
+  default_prompt: "Use $talking-head-rough-cut to rough cut this talking-head course video into a reviewable first pass."

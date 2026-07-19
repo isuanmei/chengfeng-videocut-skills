@@ -1,0 +1,4 @@
+interface:
+  display_name: "口播精剪"
+  short_description: "Tighter filler cleanup for lecture videos"
+  default_prompt: "Use $talking-head-fine-cut to fine cut this course video and remove fillers like 嗯, 啊, 那个."
